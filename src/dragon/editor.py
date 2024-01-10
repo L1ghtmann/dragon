@@ -595,7 +595,7 @@ class ProjectEditor:
             self.config = {}
             self.preexisting_config = False
 
-    def create_new_module(self):
+    def create_new_module(self) -> Module:
         if not self.preexisting_config:
             project = Project(self.project_root_directory)
             project.create_new()
@@ -605,12 +605,18 @@ class ProjectEditor:
         mod.create_new(self.project_root_directory)
         self.config[mod.name] = mod.variables
         os.chdir(self.project_root_directory)
+        return mod
 
 
 def main():
     editor = ProjectEditor()
-    editor.create_new_module()
-    with open('DragonMake', 'w') as f:
+    mod = editor.create_new_module()
+
+    path = 'DragonMake'
+    if 'dir' in mod.variables:
+        path = mod.variables['dir'] + '/' + path
+
+    with open(path, 'w') as f:
         f.write(yaml.dump(editor.config, Dumper=yaml.RoundTripDumper))
 
 
