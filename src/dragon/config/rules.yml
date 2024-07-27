@@ -59,7 +59,7 @@ copy:
   cmd: "cp $in $out"
 lipo:
   name: "Lipo Utility"
-  desc: "Merging architechtures"
+  desc: "Merging architectures"
   cmd: "$lipo -create $in -output $out"
 bundle:
   name: "Bundle Resources"
@@ -68,7 +68,7 @@ bundle:
 debug:
   name: "DsymUtil"
   desc: "Generating Debug Symbols for $name"
-  cmd: "cp $in $out"
+  cmd: "$dsym $in"
 sign:
   name: "$codesign"
   desc: "Signing $name"
