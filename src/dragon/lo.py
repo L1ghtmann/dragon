@@ -5,9 +5,8 @@ import json, os, ssl, sys, tarfile
 from tqdm import tqdm
 from shared.util import dprintline, OutputColors, OutputWeight
 
-plat = platform.platform()
-host_os = plat.split('-')[0]
-host_arch = plat.split('-')[2]
+host_os = "macos" if platform.system() == "Darwin" else platform.system().lower()
+host_arch = platform.machine().lower()
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -62,13 +61,22 @@ def fetch():
                 return
     for asset in response['assets']:
         n = asset['name']
-        n = n.replace('llvm-objcs-', '').replace('.tar.gz', '')
-        op_sys = n.split('-')[0]
-        arch = n.split('-')[1]
-        if op_sys.lower() == host_os.lower() and arch.lower() == host_arch.lower():
-            log(f"Found build for {op_sys}-{arch}, installing")
-            install_from_url(ctx, asset['browser_download_url'])
-            return
+        parts = n.split('-')
+        op_sys = parts[2]
+        arch = parts[-1].split('.')[0]
+        # asset name format:
+        # llvm-objcs-macOS-x86_64.tar.gz
+        # llvm-objcs-ubuntu-22.04.2-x86_64.tar.gz
+        if arch.lower() == host_arch:
+            if op_sys.lower() == host_os:
+                log(f"Found build for {op_sys}-{arch}, installing")
+                install_from_url(ctx, asset['browser_download_url'])
+                return
+            elif op_sys.lower() == 'ubuntu' and host_os == 'linux':
+                # generalize to Debian base for now
+                log(f"Found build for {op_sys}-{arch}, installing")
+                install_from_url(ctx, asset['browser_download_url'])
+                return
 
     log(f"Couldn't find a build for {host_os}-{host_arch}")
 
