@@ -75,5 +75,11 @@ def fetch():
 
 # tag format: llvm-objcs-0.0.1-llvm-17.0.0
 if __name__ == "__main__":
-    if 'setup' in sys.argv[1] or 'update' in sys.argv[1]:
-        fetch()
+    if len(sys.argv) == 2:
+        if 'setup' in sys.argv[1] or 'update' in sys.argv[1]:
+            fetch()
+        else:
+            log(f'"dragon lo {sys.argv[1]}" is an invalid command')
+            log("Please run either 'dragon lo setup' or 'dragon lo update'")
+    else:
+        log("Please run either 'dragon lo setup' or 'dragon lo update'")
