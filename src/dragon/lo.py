@@ -27,7 +27,7 @@ class DownloadProgressBar(tqdm):
 def download_url(url, output_path):
     with DownloadProgressBar(unit='B', unit_scale=True,
                              miniters=1, desc=url.split('/')[-1], ) as t:
-        urllib.request.urlretrieve(url, filename=output_path, reporthook=t.update_to)
+        request.urlretrieve(url, filename=output_path, reporthook=t.update_to)
 
 
 def install_from_url(ctx, url: str):
@@ -43,6 +43,7 @@ def install_from_url(ctx, url: str):
         pass
     tar.extractall(os.environ["DRAGON_ROOT_DIR"] + '/llvm-objcs')
     os.remove(fname)
+    log('All done!')
 
 
 def fetch():
