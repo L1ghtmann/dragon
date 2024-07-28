@@ -3,7 +3,7 @@ import platform
 from urllib import request
 import json, os, ssl, sys, tarfile
 from tqdm import tqdm
-from dragon.util import dprintline, OutputColors, OutputWeight
+from shared.util import dprintline, OutputColors, OutputWeight
 
 plat = platform.platform()
 host_os = plat.split('-')[0]
