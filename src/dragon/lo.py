@@ -1,7 +1,7 @@
 from ruyaml import YAML
 import platform
 from urllib import request
-import json, os, ssl, sys, tarfile
+import json, os, shutil, ssl, sys, tarfile
 from tqdm import tqdm
 from shared.util import dprintline, OutputColors, OutputWeight
 
@@ -52,14 +52,21 @@ def fetch():
     ctx.check_hostname = False
     ctx.verify_mode = ssl.CERT_NONE
     response: dict = json.load(request.urlopen(iurl, context=ctx))
-    if os.path.exists(f'{destination}/metadata.yml'):
-        with open(f'{destination}/metadata.yml', 'r') as fd:
-            yaml = YAML(typ='safe')  # default, if not specfied, is 'rt' (round-trip)
-            metadata = yaml.load(fd)
-            version = metadata['version']
-            if version == response['tag_name']:
-                log('Latest LLVM-ObjCS build already installed')
-                return
+    if os.path.exists(destination):
+        if os.path.exists(f'{destination}/metadata.yml'):
+            with open(f'{destination}/metadata.yml', 'r') as fd:
+                yaml = YAML(typ='safe')  # default, if not specfied, is 'rt' (round-trip)
+                metadata = yaml.load(fd)
+                version = metadata['version']
+                if version == response['tag_name']:
+                    log('Latest LLVM-ObjCS build already installed')
+                    return
+                else:
+                    log('New LLVM-ObjCS available! Downloading ...')
+                    shutil.rmtree(destination)
+        else:
+            log('No version info present to query. Skipping.')
+            return
     for asset in response['assets']:
         n = asset['name']
         parts = n.split('-')
