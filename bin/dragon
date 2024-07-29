@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 export DRAGON_DIR=.dragon
 export DRAGON_VERS=$(python3 -c 'from dragon.util import version; print(version())')
 
