@@ -20,13 +20,8 @@ if [[ $PLATFORM == Darwin ]]; then
 				brew update
 				brew install ldid
 			else
-				read -p "Homebrew, which provides tools Dragon depends on, is not installed. Would you like to have it installed for you? [y/n]" hbrew
-				if [[ $hbrew == "y" || $hbrew == "Y" || $hbrew == "yes" || $hbrew == "YES" || $hbrew == "Yes" ]] ; then
-					bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && brew install ldid
-				else
-					prefix_print "Homebrew provides tools Dragon depends on and thus is mandatory. Please install Homebrew before proceeding."
-					drexit 1
-				fi
+				prefix_print "Homebrew provides tools Dragon depends on and thus is mandatory. Please install Homebrew before proceeding."
+				drexit 1
 			fi
 		fi
 	# iOS
